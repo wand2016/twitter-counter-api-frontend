@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>twitter counter API</title>
+    <link rel="stylesheet" href="/vue-calendar-heatmap/dist/vue-calendar-heatmap.css"/>
+    <script src="/vue-calendar-heatmap/dist/vue-calendar-heatmap.browser.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  </head>
+  <body>
+    <div id="app" style="width:100%">
+      <select
+          v-model="selected"
+          @change="handleSelect"
+      >
+        <option
+            v-for="(endpoint,apiName) in apis"
+            :key="apiName"
+            :value="endpoint"
+        >
+          {{ apiName }}
+        </option>
+      </select>
+      <calendar-heatmap
+          :values="fetchedData"
+          :end-date="new Date()"
+      />
+    </div>
+
+    <script>
+     Vue.use(VueCalendarHeatmap)
+
+     var app = new Vue({
+         el: '#app',
+         data: {
+             apis: {
+                 'シャロシコ': 'syaroshico.json',
+                 'リゼシコ': 'rizeshico.json',
+                 'シココア': 'cocoshico.json',
+                 'チヤシコ': 'chiyashico.json',
+                 'チノシコ': 'chinoshico.json',
+                 'シャミシコ': 'chinoshico.json',
+                 'しこにっき': 'shico-diary.json',
+                 'あひごち': 'ahigochi.json',
+             },
+             selected: 'syaroshico.json',
+             fetchedData: []
+         },
+         mounted() {
+             this.handleSelect();
+         },
+         methods: {
+             handleSelect() {
+                 var endpoint = "https://twitter-counter-api.s3-ap-northeast-1.amazonaws.com/" + this.selected;
+
+                 var xhr = new XMLHttpRequest();
+                 xhr.open('GET', endpoint);
+                 xhr.onload = () => {
+                     this.fetchedData = JSON.parse(xhr.responseText);
+                 }
+                 xhr.send();
+             }
+         }
+     })
+    </script>
+  </body>
+</html>

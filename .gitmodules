@@ -1,0 +1,3 @@
+[submodule "vue-calendar-heatmap"]
+	path = vue-calendar-heatmap
+	url = git@github.com:julienr114/vue-calendar-heatmap.git
