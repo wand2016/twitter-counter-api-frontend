@@ -24,13 +24,14 @@
       <calendar-heatmap
           :values="fetchedData"
           :end-date="new Date()"
+          :range-color="rangeColor"
       />
     </div>
 
     <script>
      Vue.use(VueCalendarHeatmap)
 
-     var app = new Vue({
+     const app = new Vue({
          el: '#app',
          data: {
              apis: {
@@ -39,7 +40,7 @@
                  'シココア': 'cocoshico.json',
                  'チヤシコ': 'chiyashico.json',
                  'チノシコ': 'chinoshico.json',
-                 'シャミシコ': 'chinoshico.json',
+                 'シャミシコ': 'syamishico.json',
                  'しこにっき': 'shico-diary.json',
                  'あひごち': 'ahigochi.json',
              },
@@ -49,11 +50,34 @@
          mounted() {
              this.handleSelect();
          },
+         computed: {
+             rangeColor() {
+                 if (this.selected === 'syaroshico.json') {
+                     return ['#EBEDF0','#FFF7CC','#FFEE99','#FFE666','#FFDD33','#FFD500',];
+                 }
+                 if (this.selected === 'rizeshico.json') {
+                     return ['#EBEDF0', '#DDCCFF', '#BB99FF','#9966FF','#7733FF','#5500FF',]
+                 }
+                 if (this.selected === 'cocoshico.json') {
+                     return ['#EBEDF0', '#FFE6F7','#FFCCEE','#FFB3E6','#FF99DD','#FF80D5', ]
+                 }
+                 if (this.selected === 'syamishico.json') {
+                     return ['#EBEDF0', '#FFE6EA','#FFCCD5','#FFB3BF','#FF99AA','#FF8095',];
+                 }
+                 if (this.selected === 'chinoshico.json') {
+                     return ['#EBEDF0', '#CCEEFF','#99DDFF','#66CCFF','#33BBFF','#00AAFF',]
+                 }
+                 if (this.selected === 'chiyashico.json') {
+                     return ['#EBEDF0', '#1EB300','#1A9900','#158000','#116600','#0D4D00',]
+                 }
+                 return ['ebedf0', 'dae2ef', '#c0ddf9', '#73b3f3', '#3886e1', '#17459e'];
+             }
+         },
          methods: {
              handleSelect() {
-                 var endpoint = "https://twitter-counter-api.s3-ap-northeast-1.amazonaws.com/" + this.selected;
+                 const endpoint = "https://twitter-counter-api.s3-ap-northeast-1.amazonaws.com/" + this.selected;
 
-                 var xhr = new XMLHttpRequest();
+                 const xhr = new XMLHttpRequest();
                  xhr.open('GET', endpoint);
                  xhr.onload = () => {
                      this.fetchedData = JSON.parse(xhr.responseText);
