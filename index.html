@@ -8,6 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   </head>
   <body>
+    <main>
+      <section>
     <div id="app" style="width:100%">
       <select
           v-model="selected"
@@ -30,10 +32,50 @@
         />
       </div>
       <div>
-        検索クエリ:
-        {{ this.query }}
+        検索クエリ: <output>{{ this.query }}</output>
       </div>
     </div>
+      </section>
+      <section>
+        <p>
+          <h2>これは何</h2>
+          <ul>
+            <li>
+              twitter上でのシコツイートを検索・日次集計して可視化します。
+            </li>
+            <li>
+              30分ごとに検索・集計を行います。
+            </li>
+            <li>
+              ヒートマップ上の正方形は1日を、色の濃淡がシコの多寡を表します。
+            </li>
+            <li>
+              ヒートマップ上の正方形をクリックすると、その日のシコツイートの検索画面を開きます。
+            </li>
+            <li>
+              ヒートマップの下に検索クエリが表示されます。
+            </li>
+          </ul>
+        </p>
+        <p>
+          <h2>制限</h2>
+          ツイートの検索には
+          <a href="https://developer.twitter.com/en/docs/twitter-api/tweets/search/api-reference/get-tweets-search-recent" target="_blank">
+            Twitter API v2 の GET /2/tweets/search/recent
+          </a>
+          を使用しており、本API由来の制限があります:
+          <ul>
+            <li>
+              APIの検索結果とブラウザ上での検索結果が完全には一致しません。キャラ名がひらがなの場合が顕著です。
+            </li>
+            <li>
+              直近7日間のツイートしか取得できないため、昔のデータは取得できません。<br/>
+              また、8日以上たってからのツイ消しやアカウント公開/非公開切替えも反映されません。
+            </li>
+          </ul>
+        </p>
+      </section>
+    </main>
 
     <script>
      Vue.use(VueCalendarHeatmap)
