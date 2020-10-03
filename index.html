@@ -144,7 +144,7 @@
              total() {
                  return this.fetchedData.data
                             .map((datum) =>  datum.count)
-                            .reduce((acc, e) => acc + e)
+                            .reduce(((acc, e) => acc + e), 0)
              },
          },
          methods: {
