@@ -32,7 +32,10 @@
         />
       </div>
       <div>
-        検索クエリ: <output>{{ this.query }}</output>
+        <ul>
+          <li>検索クエリ: <output>{{ query }}</output></li>
+          <li>総数: {{ total }}</li>
+        </ul>
       </div>
     </div>
       </section>
@@ -128,7 +131,12 @@
              },
              query() {
                  return this.fetchedData._embedded.query;
-             }
+             },
+             total() {
+                 return this.fetchedData.data
+                            .map((datum) =>  datum.count)
+                            .reduce((acc, e) => acc + e)
+             },
          },
          methods: {
              handleSelect() {
