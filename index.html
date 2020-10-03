@@ -21,12 +21,18 @@
           {{ apiName }}
         </option>
       </select>
-      <calendar-heatmap
-          :values="fetchedData"
-          :end-date="new Date()"
-          :range-color="rangeColor"
-          @day-click="handleDayClick"
-      />
+      <div>
+        <calendar-heatmap
+            :values="fetchedData.data"
+            :end-date="new Date()"
+            :range-color="rangeColor"
+            @day-click="handleDayClick"
+        />
+      </div>
+      <div>
+        検索クエリ:
+        {{ this.query }}
+      </div>
     </div>
 
     <script>
@@ -48,7 +54,10 @@
                  'あひごち': 'ahigochi.json',
              },
              selected: 'syaroshico.json',
-             fetchedData: []
+             fetchedData: {
+                 data: [],
+                 _embedded: {}
+             }
          },
          mounted() {
              this.handleSelect();
@@ -74,6 +83,9 @@
                      return ['#EBEDF0', '#1EB300','#1A9900','#158000','#116600','#0D4D00',]
                  }
                  return ['ebedf0', 'dae2ef', '#c0ddf9', '#73b3f3', '#3886e1', '#17459e'];
+             },
+             query() {
+                 return this.fetchedData._embedded.query;
              }
          },
          methods: {
@@ -89,20 +101,6 @@
              },
              handleDayClick(day) {
 
-                 //TODO: backend側で作る
-                 const map = {
-                     'syaroshico.json': 'シャロシコ OR syaroshico',
-                     'rizeshico.json': 'リゼシコ OR rizeshico',
-                     'cocoshico.json': 'シココア OR ココシコ OR shicocoa OR cocoshico',
-                     'chiyashico.json': 'チヤシコ OR chiyashico',
-                     'chinoshico.json': 'チノシコ OR chinoshico',
-                     'pinoshico.json': 'ぴのシコ OR pinoshico',
-                     'poposhico.json': 'ぽぽシコ OR poposhico',
-                     'syamishico.json': 'シャミシコ OR syamishico',
-                 }
-                 const match = map[this.selected];
-                 if(!match) return;
-
                  const date = day.date
                  const since = 'since:'
                              + date.getFullYear() + '-'
@@ -114,12 +112,12 @@
                              + date.getDate() + '_23:59:59_JST';
 
                  const query = [
-                     '(' + match + ')',
+                     this.query,
                      since,
                      until
                  ].join(' ');
 
-                 const href = 'https://twitter.com/search?q=' + query;
+                 const href = 'https://twitter.com/search?q=' + encodeURIComponent(query);
 
                  window.open(href, 'shico');
              }
