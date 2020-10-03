@@ -25,6 +25,7 @@
           :values="fetchedData"
           :end-date="new Date()"
           :range-color="rangeColor"
+          @day-click="handleDayClick"
       />
     </div>
 
@@ -83,6 +84,40 @@
                      this.fetchedData = JSON.parse(xhr.responseText);
                  }
                  xhr.send();
+             },
+             handleDayClick(day) {
+
+                 //TODO: backend側で作る
+                 const map = {
+                     'syaroshico.json': 'シャロシコ OR syaroshico',
+                     'rizeshico.json': 'リゼシコ OR rizeshico',
+                     'cocoshico.json': 'シココア OR ココシコ OR shicocoa OR cocoshico',
+                     'chiyashico.json': 'チヤシコ OR chiyashico',
+                     'chinoshico.json': 'チノシコ OR chinoshico',
+                     'syamishico.json': 'シャミシコ OR syamishico',
+                 }
+                 const match = map[this.selected];
+                 if(!match) return;
+
+                 const date = day.date
+                 const since = 'since:'
+                             + date.getFullYear() + '-'
+                             + (date.getMonth() + 1) + '-'
+                             + date.getDate() + '_00:00:00_JST';
+                 const until = 'until:'
+                             + date.getFullYear() + '-'
+                             + (date.getMonth() + 1) + '-'
+                             + date.getDate() + '_23:59:59_JST';
+
+                 const query = [
+                     '(' + match + ')',
+                     since,
+                     until
+                 ].join(' ');
+
+                 const href = 'https://twitter.com/search?q=' + query;
+
+                 window.open(href);
              }
          }
      })
